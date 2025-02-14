@@ -7,6 +7,7 @@
 #include <pwd.h>
 #include <ghc/filesystem.hpp>
 #endif
+
 #ifdef OS_IS_WINDOWS
 #include <windows.h>
 #include <shlwapi.h>
@@ -16,6 +17,10 @@
 // #include <pathcch.h>
 // #pragma comment(lib, "pathcch.lib")
 #include <codecvt>
+#endif
+
+#ifdef __MINGW32__
+#include <locale>
 #endif
 
 #include "../core/makedir.h"

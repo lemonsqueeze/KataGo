@@ -9,6 +9,10 @@
 #include <shellapi.h>
 #endif
 
+#ifdef __MINGW32__
+#include <locale>
+#endif
+
 std::vector<std::string> MainArgs::getCommandLineArgsUTF8(int argc, const char* const* argv) {
 #ifdef OS_IS_WINDOWS
   // Ignore argc and argv entirely and just call Windows-specific functions to get the full command line without

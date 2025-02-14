@@ -565,7 +565,7 @@ int MainCmds::writetrainingdata(const vector<string>& args) {
   string kgsCsv;
   SimpleDate kgsCsvMinDate("0000-01-01");
   SimpleDate kgsCsvMaxDate("9999-12-31");
-  size_t maxFilesToLoad;
+  int maxFilesToLoad;
   bool shuffleFiles;
   double keepProb;
   double gameKeepFracMin;
@@ -591,7 +591,7 @@ int MainCmds::writetrainingdata(const vector<string>& args) {
     TCLAP::ValueArg<string> kgsCsvArg("","kgs-csv","KGS keeps whether games are rated as separate csv",false,string(),"CSVFILE");
     TCLAP::ValueArg<string> kgsCsvMinDateArg("","kgs-csv-min-date","Min date to use from csv",false,string(),"DATE");
     TCLAP::ValueArg<string> kgsCsvMaxDateArg("","kgs-csv-max-date","Max date to use from csv",false,string(),"DATE");
-    TCLAP::ValueArg<size_t> maxFilesToLoadArg("","max-files-to-load","Max sgf files to try to load",false,(size_t)10000000000000ULL,"NUM");
+    TCLAP::ValueArg<int> maxFilesToLoadArg("","max-files-to-load","Max sgf files to try to load",false,2000000000,"NUM");
     TCLAP::SwitchArg shuffleFilesArg("","shuffle-files","Shuffle order of files handled");
     TCLAP::ValueArg<double> keepProbArg("","keep-prob","Keep poses with this prob",false,1.0,"PROB");
     TCLAP::ValueArg<double> gameKeepFracMinArg("","game-keep-frac-min","Keep games frac min",false,0.0,"MIN");
@@ -2399,7 +2399,7 @@ int MainCmds::writetrainingdata(const vector<string>& args) {
 
   Parallel::iterRange(
     numWorkerThreads,
-    std::min(maxFilesToLoad,sgfFiles.size()),
+    std::min((size_t)maxFilesToLoad,sgfFiles.size()),
     logger,
     std::function<void(int,size_t)>(processSgf)
   );

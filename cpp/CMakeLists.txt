@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18.2)
 project(katago)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 include_directories(external)
 include_directories(external/tclap-1.2.2/include)
@@ -339,7 +339,11 @@ elseif(USE_BACKEND STREQUAL "OPENCL")
   endif()
 elseif(USE_BACKEND STREQUAL "EIGEN")
   target_compile_definitions(katago PRIVATE USE_EIGEN_BACKEND)
-  if(NOT (MSVC OR MINGW))
+  if(MINGW)
+    find_package (Eigen3 REQUIRED NO_MODULE)
+    include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
+    message(STATUS "Found Eigen3 at ${EIGEN3_INCLUDE_DIRS}")
+  elseif(NOT MSVC)
     find_package(Eigen3 REQUIRED)
     include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
     message(STATUS "Found Eigen3 at ${EIGEN3_INCLUDE_DIRS}")
@@ -436,6 +440,10 @@ if(MSVC)
   endif()
 
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:8388608")
+endif()
+
+if(MINGW)
+  target_link_libraries(katago ws2_32 shlwapi)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")

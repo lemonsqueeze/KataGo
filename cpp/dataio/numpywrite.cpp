@@ -1,3 +1,4 @@
+#include "../core/os.h"
 #include "../dataio/numpywrite.h"
 
 #include <cstring>

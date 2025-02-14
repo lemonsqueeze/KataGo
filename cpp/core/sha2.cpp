@@ -1,3 +1,4 @@
+#include "../core/os.h"
 #include "../core/sha2.h"
 
 /*
