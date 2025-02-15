@@ -372,6 +372,11 @@ if(NO_GIT_REVISION AND (NOT BUILD_DISTRIBUTED))
   target_compile_definitions(katago PRIVATE NO_GIT_REVISION)
 endif()
 
+
+if(MINGW)	# Mingw64 static build
+  option(ZLIB_USE_STATIC_LIBS "" ON)
+endif()
+
 find_package(ZLIB)
 if(ZLIB_FOUND)
   include_directories(${ZLIB_INCLUDE_DIRS})
@@ -442,8 +447,11 @@ if(MSVC)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:8388608")
 endif()
 
-if(MINGW)
-  target_link_libraries(katago ws2_32 shlwapi)
+if(MINGW)	# Mingw64 static build
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+
+  # Override system libraries (default pulls DLLs we don't need)
+  set(CMAKE_CXX_STANDARD_LIBRARIES "-lstdc++ -lws2_32 -lshlwapi")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
