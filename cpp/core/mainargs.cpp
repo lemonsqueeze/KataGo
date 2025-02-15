@@ -2,19 +2,15 @@
 
 #include "../core/os.h"
 
-#ifdef OS_IS_WINDOWS
+#if defined(OS_IS_WINDOWS) && !defined(__MINGW32__)
 #include <codecvt>
 #include <windows.h>
 #include <processenv.h>
 #include <shellapi.h>
 #endif
 
-#ifdef __MINGW32__
-#include <locale>
-#endif
-
 std::vector<std::string> MainArgs::getCommandLineArgsUTF8(int argc, const char* const* argv) {
-#ifdef OS_IS_WINDOWS
+#if defined(OS_IS_WINDOWS) && !defined(__MINGW32__)
   // Ignore argc and argv entirely and just call Windows-specific functions to get the full command line without
   // losing information in the case of non-ascii input.
   // Then convert to UTF8
@@ -36,7 +32,7 @@ std::vector<std::string> MainArgs::getCommandLineArgsUTF8(int argc, const char* 
 #endif
 }
 
-#ifdef OS_IS_WINDOWS
+#if defined(OS_IS_WINDOWS) && !defined(__MINGW32__)
 
 // Converts utf8 used in the rest of the program to windows wide char encoding
 // just before output to console.
